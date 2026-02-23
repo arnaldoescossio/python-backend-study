@@ -1,0 +1,5 @@
+{
+  "python.analysis.typeCheckingMode": "basic",
+  "python.defaultInterpreterPath": "./venv/Scripts/python.exe",
+  "editor.formatOnSave": true
+}
