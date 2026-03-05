@@ -1,12 +1,18 @@
+from week_2.day_2.application.config.logging_config import logger
 from week_2.day_2.application.dtos.transaction_report_dto import TransactionReportDTO
-from week_2.day_2.domain.exceptions.no_valid_transactions_exception import NoValidTransactionException
-from week_2.day_2.domain.repositories.transaction_repository import TransactionRepository
+from week_2.day_2.domain.exceptions.no_valid_transactions_exception import (
+    NoValidTransactionException,
+)
+from week_2.day_2.domain.repositories.transaction_repository import (
+    TransactionRepository,
+)
+
 
 class GenerateTransactionReportUseCase:
 
     def __init__(self, repository: TransactionRepository):
         self._repository = repository
-    
+
     def execute(self) -> TransactionReportDTO:
 
         transactions = self._repository.get_all()
@@ -21,6 +27,14 @@ class GenerateTransactionReportUseCase:
         average_amount: float = total_amount / valid_count if valid_count > 0 else 0
         failed_count: int = sum(1 for t in transactions if t.is_failed())
 
-        return TransactionReportDTO(valid_count, total_amount, average_amount, failed_count)
+        logger.info(
+            "Transaction report generated successfully.",
+            valid_count=valid_count,
+            total_amount=total_amount,
+            average_amount=average_amount,
+            failed_count=failed_count
+        )
 
-
+        return TransactionReportDTO(
+            valid_count, total_amount, average_amount, failed_count
+        )

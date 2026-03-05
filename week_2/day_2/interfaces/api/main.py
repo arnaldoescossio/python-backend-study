@@ -4,6 +4,7 @@ from week_2.day_2.application.use_cases.generate_transaction_report import Gener
 from week_2.day_2.domain.exceptions.no_valid_transactions_exception import NoValidTransactionException
 from week_2.day_2.infrastructure.repositories.postgres_transaction_repository import PostgresTransactionRepository
 from week_2.day_2.infrastructure.database import get_db
+from week_2.day_2.application.config.logging_config import logger
 
 app = FastAPI()
 
@@ -19,6 +20,6 @@ def generate_report(
     try:
         return use_case.execute()
     except NoValidTransactionException as e:
-        print(f"Error: {e}")
-        exit(1)
+        logger.error(f"Error: {e}")
+        return {"error": str(e)}
   
