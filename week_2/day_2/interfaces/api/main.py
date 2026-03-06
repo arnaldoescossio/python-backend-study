@@ -5,6 +5,7 @@ from week_2.day_2.domain.exceptions.no_valid_transactions_exception import NoVal
 from week_2.day_2.infrastructure.repositories.postgres_transaction_repository import PostgresTransactionRepository
 from week_2.day_2.infrastructure.database import get_db
 from week_2.day_2.application.config.logging_config import logger
+from week_2.day_2.interfaces.api.security.security import verify_token
 
 app = FastAPI()
 
@@ -15,9 +16,11 @@ def get_use_case(db: Session = Depends(get_db)):
 
 @app.get("/transactions/report")
 def generate_report(
+    user = Depends(verify_token),
     use_case: GenerateTransactionReportUseCase = Depends(get_use_case)
 ):
     try:
+        logger.info(f"User {user['user']} is generating a transaction report")
         return use_case.execute()
     except NoValidTransactionException as e:
         logger.error(f"Error: {e}")
